@@ -1,3 +1,4 @@
+import { Metadata } from 'next';
 import {
   QueryClient,
   HydrationBoundary,
@@ -12,6 +13,36 @@ type Props = {
 };
 
 const tags = ['Todo', 'Work', 'Personal', 'Meeting', 'Shopping'];
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const tag = slug[0];
+  const tagVariable =
+    slug[0] === 'all'
+      ? `All your notes in one place.`
+      : `All your notes tagged ${tag} in one place.`;
+
+  return {
+    title: `${tag} notes | NoteHub`,
+    description: tagVariable,
+
+    openGraph: {
+      title: `${tag} notes | NoteHub`,
+      description: tagVariable,
+      url: `https://notehub.com/notes/filter/${tag}`,
+      siteName: 'NoteHub',
+      images: [
+        {
+          url: 'https://ac.goit.global/fullstack/react/notehub-og-meta.jpg',
+          width: 1200,
+          height: 630,
+          alt: 'NoteHub',
+        },
+      ],
+      type: 'website',
+    },
+  };
+}
 
 const Notes = async ({ params }: Props) => {
   const { slug } = await params;
